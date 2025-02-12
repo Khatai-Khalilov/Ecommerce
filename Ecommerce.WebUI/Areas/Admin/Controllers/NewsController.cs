@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Ecommerce.Core.Entities;
 using Ecommerce.Data;
-//using Eticaret.WebUI.Utils;
-using Microsoft.AspNetCore.Authorization;
+using Ecommerce.WebUI.Utils;
 
 namespace Eticaret.WebUI.Areas.Admin.Controllers
 {
@@ -54,7 +53,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //news.Image = await FileHelper.FileLoaderAsync(Image);
+                news.Image = await FileHelper.FileLoaderAsync(Image);
                 _context.Add(news);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,7 +94,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                     if (cbResmiSil)
                         news.Image = string.Empty;
                     if (Image is not null)
-                        //news.Image = await FileHelper.FileLoaderAsync(Image, "/Img/");
+                     news.Image = await FileHelper.FileLoaderAsync(Image);
                     _context.Update(news);
                     await _context.SaveChangesAsync();
                 }
@@ -143,7 +142,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(news.Image))
                 {
-                    //FileHelper.FileRemover(news.Image, "/Img/");
+                    FileHelper.FileRemover(news.Image);
                 }
                 _context.News.Remove(news);
             }

@@ -4,6 +4,8 @@ using Ecommerce.Core.Entities;
 using Ecommerce.Data;
 //using Eticaret.WebUI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Ecommerce.WebUI.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Eticaret.WebUI.Areas.Admin.Controllers
 {
@@ -54,7 +56,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //slider.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Slider/");
+                slider.Image = await FileHelper.FileLoaderAsync(Image, "/img/Slider/");
+
                 _context.Add(slider);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,7 +98,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                     if (cbResmiSil)
                         slider.Image = string.Empty;
                     if (Image is not null)
-                        //slider.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Slider/");
+                        slider.Image = await FileHelper.FileLoaderAsync(Image, "/img/Slider/");
+
                     _context.Update(slider);
                     await _context.SaveChangesAsync();
                 }
@@ -143,8 +147,9 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(slider.Image))
                 {
-                    //FileHelper.FileRemover(slider.Image, "/Img/Slider/");
+                    FileHelper.FileRemover(slider.Image);
                 }
+
                 _context.Sliders.Remove(slider);
             }
 

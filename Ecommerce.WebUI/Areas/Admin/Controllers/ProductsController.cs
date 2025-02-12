@@ -5,6 +5,8 @@ using Ecommerce.Core.Entities;
 using Ecommerce.Data;
 //using Eticaret.WebUI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Ecommerce.WebUI.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Eticaret.WebUI.Areas.Admin.Controllers
 {
@@ -60,7 +62,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //product.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Products/");
+                product.Image = await FileHelper.FileLoaderAsync(Image, "/img/Product/");
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -105,7 +108,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                     if (cbResmiSil)
                         product.Image = string.Empty;
                     if (Image is not null)
-                        //product.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Products/");
+                        product.Image = await FileHelper.FileLoaderAsync(Image, "/img/Product/");
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -155,6 +158,11 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
+                if (!string.IsNullOrEmpty(product.Image))
+                {
+                    FileHelper.FileRemover(product.Image, "/img/Product/");
+                }
+
                 _context.Products.Remove(product);
             }
 

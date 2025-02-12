@@ -4,6 +4,7 @@ using Ecommerce.Core.Entities;
 using Ecommerce.Data;
 //using Ecommerce.WebUI.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Ecommerce.WebUI.Utils;
 
 namespace Eticaret.WebUI.Areas.Admin.Controllers
 {
@@ -31,8 +32,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var brand = await _context.Brands
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var brand = await _context.Brands.FirstOrDefaultAsync(m => m.Id == id);
+
             if (brand == null)
             {
                 return NotFound();
@@ -54,7 +55,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+                brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+
                 _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -94,8 +96,10 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                 {
                     if (cbResmiSil)
                         brand.Logo = string.Empty;
+
                     if (Logo is not null)
-                        //brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+                        brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+
                     _context.Update(brand);
                     await _context.SaveChangesAsync();
                 }
@@ -125,6 +129,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
 
             var brand = await _context.Brands
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (brand == null)
             {
                 return NotFound();
@@ -143,7 +148,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(brand.Logo))
                 {
-                    //FileHelper.FileRemover(brand.Logo);
+                    FileHelper.FileRemover(brand.Logo);
                 }
                 _context.Brands.Remove(brand);
             }

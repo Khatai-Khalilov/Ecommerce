@@ -17,6 +17,6 @@ namespace Ecommerce.Core.Entities
         public bool IsTopMenu { get; set; }
         public int ParentId { get; set; }
         public int OrderNo { get; set; }
-        public List<Product> Products { get; set; }
+        public List<Product>? Products { get; set; }
     }
 }

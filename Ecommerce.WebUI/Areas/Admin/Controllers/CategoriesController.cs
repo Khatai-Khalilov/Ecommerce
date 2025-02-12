@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Ecommerce.Core.Entities;
 using Ecommerce.Data;
-using Microsoft.AspNetCore.Mvc.Rendering; // SelectList
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Ecommerce.WebUI.Utils; // SelectList
 //using Eticaret.WebUI.Utils;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Eticaret.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
+    [Area("Admin")]
     public class CategoriesController : Controller
     {
         private readonly DatabaseContext _context;
@@ -56,7 +56,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //category.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Categories/");
+                
+                category.Image = await FileHelper.FileLoaderAsync(Image, "/img/Category/");
                 await _context.AddAsync(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,8 +99,11 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                 {
                     if (cbResmiSil)
                         category.Image = string.Empty;
+
                     if (Image is not null)
-                        //category.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Categories/");
+                    {
+                        category.Image = await FileHelper.FileLoaderAsync(Image, "/img/Category/");
+                    }
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -146,10 +150,11 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                if (!string.IsNullOrEmpty(category.Image))
+                if (!string.IsNullOrEmpty(category.Name))
                 {
-                    //FileHelper.FileRemover(category.Image, "/Img/Categories/");
+                    FileHelper.FileRemover(category.Name, "/img/Category");
                 }
+
                 _context.Categories.Remove(category);
             }
 
